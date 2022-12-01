@@ -23,7 +23,8 @@
 			border-radius: 50%;
 		}
 
-		.angle {
+		.angle,
+		.angle_shadow {
 			background: black;
 			height: 2000px;
 			width: 2px;
@@ -32,6 +33,11 @@
 			bottom: calc(50% - 2000px);
 			transform: rotate(360deg);
 			border-bottom: white solid 2000px;
+		}
+
+		.angle_shadow {
+			background: #dedede;
+			z-index: -1;
 		}
 
 		.display {
@@ -114,11 +120,17 @@ if (debug) {
 	$(angle).addClass('angle');
 	$('body').append(angle);
 
+	let angle_shadow = document.createElement('DIV');
+	$(angle_shadow).addClass('angle_shadow');
+	$('body').append(angle_shadow);
+
+
+
 	let display = document.createElement('DIV');
 	$(display).addClass('display');
 	let displayinput = document.createElement('INPUT');
 	$(displayinput).attr('type', 'number');
-	$(displayinput).val(45);
+	$(displayinput).val(63);
 	$(display).append(displayinput);
 	$('body').append(display);
 
@@ -128,6 +140,13 @@ if (debug) {
 	$('body').append(reset_button);
 
 	$('.reset_button').bind('click', reset);
+
+	$('.display input').change(function() {
+		let val = $('.display input').first().val();
+		val = Math.abs(val % 360);
+		$('.display input').first().val(val);
+		$('.angle_shadow').css('transform', 'rotate(' + val + 'deg');
+	});
 
 }
 
@@ -202,6 +221,9 @@ function start (){
 				debug_ankathete = ankathete_rechts;
 				debug_gegenkathete = gegenkathete_rechts;
 			}
+
+
+			//Positionskorrektur
 
 
 			//geschw noch ausrechnen
