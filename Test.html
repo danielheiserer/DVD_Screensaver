@@ -192,26 +192,40 @@ function start (){
 	let debug_gegenkathete = false;
 	let debug_direction = false;
 
+	let space_top = false;
+	let space_bottom = false;
+	let space_left = false;
+	let space_right = false;
+
+	let ankathete_oben = false;
+	let gegenkathete_oben = false;
+	let ankathete_unten = false;
+	let gegenkathete_unten = false;
+	let ankathete_links = false;
+	let gegenkathete_links = false;
+	let ankathete_rechts = false;
+	let gegenkathete_rechts = false;
+
+	let distanz = false;
+	let collision = false;
+
+	let rotate_value = false;
 	switch (true){
 		case (degree < 90):
-			let space_top = block_top;
-			let space_right =   Math.abs(block_right - $('body').width());
-
-			console.log('space right: ' + space_right);
-			console.log('block right: ' + block_right);
+			space_top = block_top;
+			space_right =   Math.abs(block_right - $('body').width());
 
 			//check oben
-			let ankathete_oben = space_top + block_height / 2;
-			let gegenkathete_oben = parseInt(Math.abs(Math.tan((degree * Math.PI) / 180) * ankathete_oben));
+			ankathete_oben = space_top + block_height / 2;
+			gegenkathete_oben = parseInt(Math.abs(Math.tan((degree * Math.PI) / 180) * ankathete_oben));
 
 			//checken rechts
-			let ankathete_rechts = space_right + block_width / 2;
-			let gegenkathete_rechts = parseInt(Math.abs(Math.tan(((90 - degree) * Math.PI) / 180) * ankathete_rechts));
+			ankathete_rechts = space_right + block_width / 2;
+			gegenkathete_rechts = parseInt(Math.abs(Math.tan(((90 - degree) * Math.PI) / 180) * ankathete_rechts));
 
 			//kürzere Rute
-			let distanz = gegenkathete_oben < ankathete_rechts ? gegenkathete_oben : gegenkathete_rechts;
-			let framecollision = gegenkathete_oben < ankathete_rechts ? 'oben' : 'rechts';
-			console.log('Wird ' + framecollision + ' anstossen.');
+			distanz = gegenkathete_oben < ankathete_rechts ? gegenkathete_oben : gegenkathete_rechts;
+			framecollision = gegenkathete_oben < ankathete_rechts ? 'oben' : 'rechts';
 
 			debug_direction = framecollision;
 			if(debug_direction == 'oben') {
@@ -224,14 +238,20 @@ function start (){
 
 
 			//Positionskorrektur
-
+			correct = 0;
+			
+			if(framecollision ==  'oben') {
+				correct = parseInt(Math.abs(Math.tan((degree * Math.PI) / 180) * (block_height / 2)));
+			}else{
+				correct = parseInt(Math.abs(Math.tan(((90 - degree) * Math.PI) / 180) * block_width / 2));
+			}
 
 			//geschw noch ausrechnen
 			$('.block').css({
 				transition: "all linear 2s"
 			});
 
-			let rotate_value = 'rotate(' + degree + 'deg)';
+			rotate_value = 'rotate(' + degree + 'deg)';
 			$('.angle').css({
 				transform: rotate_value
 			});
@@ -239,17 +259,76 @@ function start (){
 			if (framecollision == 'oben') {
 				$('.block').css({
 					top: "0",
-					left: block_left + distanz
+					left: block_left + distanz - correct
 				});
 			}else{
 				$('.block').css({
-					top: block_top - distanz,
+					top: block_top - distanz + correct,
 					left: $('body').width() - block_width
 				});
 			}
 
 			break;
 		case (degree < 180):
+
+			space_bottom = block_bottom;
+			space_right = Math.abs(block_right - $('body').width());
+
+			//check unten
+			ankathete_unten = space_top + block_height / 2;
+			gegenkathete_unten = parseInt(Math.abs(Math.tan(((degree - 90) * Math.PI) / 180) * ankathete_unten));
+
+			//checken rechts
+			ankathete_rechts = space_right + block_width / 2;
+			gegenkathete_rechts = parseInt(Math.abs(Math.tan(((180 - degree) * Math.PI) / 180) * ankathete_rechts));
+
+			//kürzere Rute
+			distanz = gegenkathete_unten < ankathete_rechts ? gegenkathete_unten : gegenkathete_rechts;
+			framecollision = gegenkathete_unten < ankathete_rechts ? 'unten' : 'rechts';
+
+			console.log(framecollision);
+
+			debug_direction = framecollision;
+			if(debug_direction == 'unten') {
+				debug_ankathete = ankathete_unten;
+				debug_gegenkathete = gegenkathete_unten;
+			}else{
+				debug_ankathete = ankathete_rechts;
+				debug_gegenkathete = gegenkathete_rechts;
+			}
+
+
+			//Positionskorrektur
+			correct = 0;
+			
+			if(framecollision ==  'unten') {
+				correct = parseInt(Math.abs(Math.tan((180 - degree * Math.PI) / 180) * (block_height / 2)));
+			}else{
+				correct = parseInt(Math.abs(Math.tan(((degree - 90) * Math.PI) / 180) * block_width / 2));
+			}
+
+			//geschw noch ausrechnen
+			$('.block').css({
+				transition: "all linear 2s"
+			});
+
+			rotate_value = 'rotate(' + degree + 'deg)';
+			$('.angle').css({
+				transform: rotate_value
+			});
+
+			if (framecollision == 'unten') {
+				$('.block').css({
+					top: "0",
+					left: block_left + distanz - correct
+				});
+			}else{
+				$('.block').css({
+					top: block_top - distanz + correct,
+					left: $('body').width() - block_width
+				});
+			}
+
 			break;
 		case (degree < 270):
 			break;
