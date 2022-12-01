@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+
+		.block {
+			background: yellowgreen;
+			height: 50px;
+			width: 50px;
+			/*animation: spinner 1500ms infinite linear;*/
+			position: absolute;
+			top: calc(50% - 25px);
+			left: calc(50% - 25px);
+			transition: all linear 3s;
+			z-index: 1;
+			border: solid green 20px;
+			box-sizing: border-box;
+			opacity: .7;
+			border-radius: 50%;
+		}
+
+		.angle {
+			background: black;
+			height: 2000px;
+			width: 2px;
+			position: absolute;
+			left: calc(50% + 1px);
+			bottom: calc(50% - 2000px);
+			transform: rotate(360deg);
+			border-bottom: white solid 2000px;
+		}
+
+		.display {
+			position: absolute;
+			bottom: 60px;
+			left: 25px;
+			height: 20px;
+			width: 50px;
+			background: powderblue;
+			opacity: .8;
+			padding: 10px;
+
+		}
+
+		.display input{
+			max-width: 90%;
+		}
+
+		.reset_button {
+			position: absolute;
+			bottom: 15px;
+			left: 25px;
+			height: 20px;
+			width: 50px;
+			background: powderblue;
+			opacity: .8;
+			padding: 10px;
+			cursor: pointer;
+		}
+
+		.debug_ankathete_element {
+			background: aqua;
+			height: 2000px;
+			width: 2px;
+			position: absolute;
+			left: calc(50% + 1px);
+			bottom: calc(50% - 2000px);
+			border-bottom: white solid 2000px;
+		}
+
+		.debug_gegenkathete_element {
+			background: green;
+			height: 2000px;
+			width: 2px;
+			position: absolute;
+			left: calc(50% + 1px);
+			bottom: calc(50% - 2000px);
+			border-bottom: white solid 2000px;
+		}
+
+		@keyframes spinner {
+   			0% {
+            	transform: rotate(0deg);
+
+   			}
+
+   			100% {
+      	     transform: rotate(360deg);
+   			}
+		}
+
+	</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="block"></div>
+</body>
+<script>
+$(document).ready(function () {
+
+$('.block').bind("mouseover",function(){
+//alert('erwischt');
+	console.log('erwischt');
+});
+
+var debug = true;
+
+if (debug) {
+	let angle = document.createElement('DIV');
+	$(angle).addClass('angle');
+	$('body').append(angle);
+
+	let display = document.createElement('DIV');
+	$(display).addClass('display');
+	let displayinput = document.createElement('INPUT');
+	$(displayinput).attr('type', 'number');
+	$(displayinput).val(45);
+	$(display).append(displayinput);
+	$('body').append(display);
+
+	let reset_button = document.createElement('DIV');
+	$(reset_button).addClass('reset_button');
+	$(reset_button).html('Reset');
+	$('body').append(reset_button);
+
+	$('.reset_button').bind('click', reset);
+
+}
+
+start();
+
+function get_random_degree(){
+	//return parseInt(Math.random() * 100000 % 360);
+	return parseInt(Math.random() * 100000 % 89);
+}
+
+function reset() {
+	$('.block').remove();
+	$('.debug_ankathete_element').remove();
+	$('.debug_gegenkathete_element').remove();
+	let block = document.createElement('DIV');
+	$(block).addClass('block');
+	$('body').append(block);
+	start();
+}
+
+function start (){
+	//let degree = get_random_degree();
+	let degree = 80;
+	//console.log(degree + ' Degrees');
+	let debug_x_origin = false;
+	let debug_y_origin = false;
+
+	let block_width = parseInt($('.block').css('width'));
+	let block_height = parseInt($('.block').css('height'));
+
+	let block_top = parseInt($('.block').css('top'));
+	let block_bottom = parseInt($('.block').css('top')) + block_height;
+	let block_left = parseInt($('.block').css('left'));
+	let block_right = parseInt($('.block').css('left')) + block_width;
+
+	if (debug){
+		degree = $('.display input')[0].value;
+		debug_x_origin = block_left + block_width / 2;
+		debug_y_origin = block_top + block_height / 2;
+	}
+
+	let debug_ankathete = false;
+	let debug_gegenkathete = false;
+	let debug_direction = false;
+
+	switch (true){
+		case (degree < 90):
+			let space_top = block_top;
+			let space_right =   Math.abs(block_right - $('body').width());
+
+			console.log('space right: ' + space_right);
+			console.log('block right: ' + block_right);
+
+			//check oben
+			let ankathete_oben = space_top + block_height / 2;
+			let gegenkathete_oben = parseInt(Math.abs(Math.tan((degree * Math.PI) / 180) * ankathete_oben));
+
+			//checken rechts
+			let ankathete_rechts = space_right + block_width / 2;
+			let gegenkathete_rechts = parseInt(Math.abs(Math.tan(((90 - degree) * Math.PI) / 180) * ankathete_rechts));
+
+			//kürzere Rute
+			let distanz = gegenkathete_oben < ankathete_rechts ? gegenkathete_oben : gegenkathete_rechts;
+			let framecollision = gegenkathete_oben < ankathete_rechts ? 'oben' : 'rechts';
+			console.log('Wird ' + framecollision + ' anstossen.');
+
+			debug_direction = framecollision;
+			if(debug_direction == 'oben') {
+				debug_ankathete = ankathete_oben;
+				debug_gegenkathete = gegenkathete_oben;
+			}else{
+				debug_ankathete = ankathete_rechts;
+				debug_gegenkathete = gegenkathete_rechts;
+			}
+
+
+			//geschw noch ausrechnen
+			$('.block').css({
+				transition: "all linear 2s"
+			});
+
+			let rotate_value = 'rotate(' + degree + 'deg)';
+			$('.angle').css({
+				transform: rotate_value
+			});
+
+			if (framecollision == 'oben') {
+				$('.block').css({
+					top: "0",
+					left: block_left + distanz
+				});
+			}else{
+				$('.block').css({
+					top: block_top - distanz,
+					left: $('body').width() - block_width
+				});
+			}
+
+			break;
+		case (degree < 180):
+			break;
+		case (degree < 270):
+			break;
+		case (degree < 360):
+			break;
+		default : break;
+
+
+
+	}
+
+	if (debug) {
+		let debug_ankathete_element = document.createElement('DIV');
+		$(debug_ankathete_element).addClass('debug_ankathete_element');
+		$('body').append(debug_ankathete_element);
+
+		let debug_gegenkathete_element = document.createElement('DIV');
+		$(debug_gegenkathete_element).addClass('debug_gegenkathete_element');
+		$('body').append(debug_gegenkathete_element);
+
+		if (debug_direction == 'oben') {
+			$('.debug_ankathete_element').css({
+				height: debug_ankathete + 'px',
+				bottom: 'calc(50% - ' + debug_ankathete + 'px)',
+				'border-bottom': 'white solid ' + debug_ankathete + 'px',
+				transform: 'rotate(0deg) translate(' + debug_gegenkathete + 'px)'
+			});
+			$('.debug_gegenkathete_element').css({
+				height: debug_gegenkathete + 'px',
+				bottom: 'calc(50% - ' + debug_gegenkathete + 'px)',
+				'border-bottom': 'white solid ' + debug_gegenkathete + 'px',
+				transform: 'rotate(90deg)'
+			});
+		}else {
+			$('.debug_gegenkathete_element').css({
+				height: debug_gegenkathete + 'px',
+				bottom: 'calc(50% - ' + debug_gegenkathete + 'px)',
+				'border-bottom': 'white solid ' + debug_gegenkathete + 'px',
+				transform: 'rotate(0deg)'
+			});
+			$('.debug_ankathete_element').css({
+				height: debug_ankathete + 'px',
+				bottom: 'calc(50% - ' + debug_ankathete + 'px)',
+				'border-bottom': 'white solid ' + debug_ankathete + 'px',
+				transform: 'rotate(90deg) translate(-' + debug_gegenkathete + 'px)'
+			});
+		}
+	}
+
+}
+
+});
+</script>
+</html>
