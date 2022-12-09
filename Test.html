@@ -33,7 +33,7 @@
 			height: 2000px;
 			width: 2px;
 			position: absolute;
-			left: calc(50% + 1px);
+			left: calc(50% - 1px);
 			bottom: calc(50% - 2000px);
 			transform: rotate(360deg);
 			border-bottom: white solid 2000px;
@@ -42,6 +42,9 @@
 		.angle_shadow {
 			background: #dedede;
 			z-index: -1;
+			border-left: 24px solid aliceblue;
+			border-right: 24px solid aliceblue;
+			left: calc(50% - 25px);
 		}
 
 		.display {
@@ -53,7 +56,23 @@
 			background: powderblue;
 			opacity: .8;
 			padding: 10px;
+		}
 
+		.origin_control {
+			background: lightcyan;
+			height: 10px;
+			width: 10px;
+			position: absolute;
+			left: calc(50% - 15px);
+			bottom: calc(50% - 15px);
+			border-radius: 50%;
+			opacity: .7;
+			border: indianred 10px solid;
+			cursor: grab;
+		}
+
+		.origin_control.grabbing {
+			cursor: grabbing;
 		}
 
 		.display input{
@@ -92,17 +111,6 @@
 			border-bottom: white solid 2000px;
 		}
 
-		@keyframes spinner {
-			0% {
-				transform: rotate(0deg);
-
-			}
-
-			100% {
-				transform: rotate(360deg);
-			}
-		}
-
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
@@ -111,18 +119,12 @@
 <script>
 	// TO-DO
 	// Bounce() sollte mehr Funktionen nutzen? (Auslagerung)
+	// Transform Translate statt transition?
 
 	var debug = false;
 	var debug_bounce_counter = 0;
-	var debug_bounce_limit = 0;
+	var debug_bounce_limit = 10;
 	$(document).ready(function () {
-
-		$('.block').bind("mouseover",function(){
-			alert('erwischt');
-			console.log('erwischt');
-		});
-
-
 
 		var block_speed = false; //in px per second
 
@@ -130,12 +132,6 @@
 			let angle = document.createElement('DIV');
 			$(angle).addClass('angle');
 			$('body').append(angle);
-
-			let angle_shadow = document.createElement('DIV');
-			$(angle_shadow).addClass('angle_shadow');
-			$('body').append(angle_shadow);
-
-
 
 			let display = document.createElement('DIV');
 			$(display).addClass('display');
@@ -145,11 +141,41 @@
 			$(display).append(displayinput);
 			$('body').append(display);
 
+			let angle_shadow = document.createElement('DIV');
+			$(angle_shadow).addClass('angle_shadow');
+			$('body').append(angle_shadow);
+			let val = $('.display input').first().val();
+			$(angle_shadow).css('transform', 'rotate(' + val + 'deg');
+
+			let drag = false;
+			let origin_control = document.createElement('DIV');
+			$(origin_control).addClass('origin_control');
+			$(origin_control).mousedown(function(){
+				$(origin_control).css('cursor', 'grabbing');
+				drag = true;
+			});
+			$('body').mousemove(function(){
+				if(drag){
+					$(origin_control).css({
+						top: 'calc(' + event.pageY + 'px - 15px)',
+						left: 'calc(' + event.pageX + 'px - 15px)'
+					});
+					$(angle_shadow).css({
+						top: 'calc(' + event.pageY + 'px - 2000px)',
+						left: 'calc(' + event.pageX + 'px - 25px)'
+					});
+				}
+			});
+			$(origin_control).mouseup(function(){
+				$(origin_control).css('cursor', 'grab');
+				drag = false;
+			});
+			$('body').append(origin_control);
+
 			let reset_button = document.createElement('DIV');
 			$(reset_button).addClass('reset_button');
 			$(reset_button).html('Reset');
 			$('body').append(reset_button);
-
 			$('.reset_button').bind('click', reset);
 
 			$('.display input').change(function() {
@@ -161,8 +187,10 @@
 
 		}
 		// init
-		for (let i = 0; i < 5; i++) {
-			bounce(get_random_degree());
+		for (let i = 0; i < 25; i++) {
+			setTimeout(function () {
+				bounce(get_random_degree());
+			}, i * 100);
 		}
 
 		function get_random_degree(){
@@ -174,8 +202,15 @@
 			$('.debug_ankathete_element').remove();
 			$('.debug_gegenkathete_element').remove();
 			let block = document.createElement('DIV');
-			$(block).addClass('block');
+			$(block).addClass('block debug');
+			let posx = parseInt($('.origin_control').css('left')) + 15;
+			let posy = parseInt($('.origin_control').css('top')) + 15;
+			console.log('Posx = ' + posx + '   Posy= ' + posy);
 			$('body').append(block);
+			$(block).css({
+				top: 'calc(' + posy + 'px - 25px)',
+				left: 'calc(' + posx + 'px - 25px)'
+			});
 
 			debug_bounce_counter = 0;
 
@@ -201,6 +236,11 @@
 			});
 
 			$('body').append(block);
+
+			$(block).bind("mouseover",function(){
+				alert('erwischt');
+				console.log('erwischt');
+			});
 		}
 
 		let ausfallswinkel = false;
@@ -497,11 +537,6 @@
 				}
 
 				//geschw noch ausrechnen
-				if (framecollision == 'unten') {
-					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_unten, 2) + Math.pow(gegenkathete_unten, 2)));
-				}else{
-					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_links, 2) + Math.pow(gegenkathete_links, 2)));
-				}
 				time_next_bounce = hypotenuse / block_speed;
 				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
@@ -585,11 +620,6 @@
 				}
 
 				//geschw noch ausrechnen
-				if (framecollision == 'oben') {
-					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_oben, 2) + Math.pow(gegenkathete_oben, 2)));
-				}else{
-					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_links, 2) + Math.pow(gegenkathete_links, 2)));
-				}
 				time_next_bounce = hypotenuse / block_speed;
 				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
@@ -616,6 +646,8 @@
 			default : break;
 		}
 
+		console.log('hypotenuse: ' + hypotenuse);
+
 		if (debug) {
 			let debug_ankathete_element = document.createElement('DIV');
 			$(debug_ankathete_element).addClass('debug_ankathete_element');
@@ -630,7 +662,7 @@
 
 			$('.angle').css('bottom', 'calc(' + new_pos_bottom + 'px - 2000px)');
 
-			$('.angle').css('left', 'calc(' + new_pos_left + 'px + 1px)');
+			$('.angle').css('left', 'calc(' + new_pos_left + 'px - 1px)');
 
 
 			$('.debug_ankathete_element').css({
