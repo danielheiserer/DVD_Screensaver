@@ -10,20 +10,21 @@
 		}
 
 		.block {
-			background: yellowgreen;
 			height: 50px;
-			width: 70px;
-			/*animation: spinner 1500ms infinite linear;*/
+			width: 50px;
 			position: absolute;
 			top: calc(50% - 25px);
 			left: calc(50% - 25px);
-			transition: all linear 3s;
 			z-index: 1;
-			border: solid green 20px;
 			box-sizing: border-box;
-			opacity: .7;
 			border-radius: 50%;
 			will-change: left, top;
+		}
+
+		.block.debug {
+			background: yellowgreen;
+			border: solid green 20px;
+			opacity: .7;
 		}
 
 		.angle,
@@ -106,7 +107,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
-<div class="block"></div>
 </body>
 <script>
 	// TO-DO
@@ -118,7 +118,7 @@
 	$(document).ready(function () {
 
 		$('.block').bind("mouseover",function(){
-alert('erwischt');
+			alert('erwischt');
 			console.log('erwischt');
 		});
 
@@ -161,7 +161,9 @@ alert('erwischt');
 
 		}
 		// init
-		bounce(get_random_degree());
+		for (let i = 0; i < 5; i++) {
+			bounce(get_random_degree());
+		}
 
 		function get_random_degree(){
 			return parseInt(Math.random() * 100000 % 360);
@@ -179,13 +181,27 @@ alert('erwischt');
 
 			let	degree = $('.display input')[0].value;
 
-			bounce(degree);
+			bounce(degree, block);
 		}
 
 	});
 
 
-	function bounce(einfallswinkel, seite = 'init'){
+	function bounce(einfallswinkel, block = null, seite = 'init'){
+
+		if(block == null){
+			block = document.createElement('DIV');
+			$(block).addClass('block');
+			let randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+			let randomRadius = Math.random() * 100000 % 50 + 50 // zwischen 50 und 100
+			$(block).css({
+				'background': randomColor,
+				height : randomRadius + 'px',
+				width : randomRadius + 'px',
+			});
+
+			$('body').append(block);
+		}
 
 		let ausfallswinkel = false;
 		//einfallswinkel = ausfallswinkel
@@ -201,13 +217,13 @@ alert('erwischt');
 			ausfallswinkel = Math.abs(360 - einfallswinkel);
 		}
 
-		let block_width = parseInt($('.block').css('width'));
-		let block_height = parseInt($('.block').css('height'));
+		let block_width = parseInt($(block).css('width'));
+		let block_height = parseInt($(block).css('height'));
 
-		let block_top = parseInt($('.block').css('top'));
-		let block_bottom = parseInt($('.block').css('top')) + block_height;
-		let block_left = parseInt($('.block').css('left'));
-		let block_right = parseInt($('.block').css('left')) + block_width;
+		let block_top = parseInt($(block).css('top'));
+		let block_bottom = parseInt($(block).css('top')) + block_height;
+		let block_left = parseInt($(block).css('left'));
+		let block_right = parseInt($(block).css('left')) + block_width;
 
 		let hypotenuse = false;
 		let block_speed = 250; //in px pro Sekunde
@@ -312,9 +328,8 @@ alert('erwischt');
 				//geschw noch ausrechnen time_next_bounce
 
 				time_next_bounce = hypotenuse / block_speed;
-				console.log('Time for Trans: ' + time_next_bounce);
 
-				$('.block').css({
+				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
 				});
 
@@ -324,12 +339,12 @@ alert('erwischt');
 				});
 
 				if (framecollision == 'oben') {
-					$('.block').css({
+					$(block).css({
 						top: "0",
 						left: block_left + distanz - correct
 					});
 				}else{
-					$('.block').css({
+					$(block).css({
 						top: block_top - distanz + correct,
 						left: $('body').width() - block_width
 					});
@@ -399,9 +414,8 @@ alert('erwischt');
 				//geschw noch ausrechnen time_next_bounce
 
 				time_next_bounce = Math.abs(hypotenuse) / block_speed;
-				console.log('Time for Trans: ' + time_next_bounce);
 
-				$('.block').css({
+				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
 				});
 
@@ -411,12 +425,12 @@ alert('erwischt');
 				});
 
 				if (framecollision == 'unten') {
-					$('.block').css({
+					$(block).css({
 						top: $('body').height() - block_height,
 						left: block_left + distanz - correct
 					});
 				}else{
-					$('.block').css({
+					$(block).css({
 						top: block_top + distanz - correct,
 						left: $('body').width() - block_width
 					});
@@ -489,8 +503,7 @@ alert('erwischt');
 					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_links, 2) + Math.pow(gegenkathete_links, 2)));
 				}
 				time_next_bounce = hypotenuse / block_speed;
-				console.log('Time for Trans: ' + time_next_bounce);
-				$('.block').css({
+				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
 				});
 
@@ -500,12 +513,12 @@ alert('erwischt');
 				});
 
 				if (framecollision == 'unten') {
-					$('.block').css({
+					$(block).css({
 						top: $('body').height() - block_height,
 						left: block_left - distanz + correct
 					});
 				}else{
-					$('.block').css({
+					$(block).css({
 						top: block_top + distanz - correct,
 						left: '0'
 					});
@@ -578,8 +591,7 @@ alert('erwischt');
 					hypotenuse = parseInt(Math.sqrt(Math.pow(ankathete_links, 2) + Math.pow(gegenkathete_links, 2)));
 				}
 				time_next_bounce = hypotenuse / block_speed;
-				console.log('Time for Trans: ' + time_next_bounce);
-				$('.block').css({
+				$(block).css({
 					transition: "all linear " + time_next_bounce + "s"
 				});
 
@@ -589,12 +601,12 @@ alert('erwischt');
 				});
 
 				if (framecollision == 'oben') {
-					$('.block').css({
+					$(block).css({
 						top:'0',
 						left: block_left - distanz + correct
 					});
 				}else{
-					$('.block').css({
+					$(block).css({
 						top: block_top - distanz + correct,
 						left: '0'
 					});
@@ -613,8 +625,8 @@ alert('erwischt');
 			$(debug_gegenkathete_element).addClass('debug_gegenkathete_element');
 			$('body').append(debug_gegenkathete_element);
 
-			let new_pos_bottom = parseInt($('.block').css('bottom')) + block_height / 2;
-			let new_pos_left = parseInt($('.block').css('left')) + block_width / 2;
+			let new_pos_bottom = parseInt($(block).css('bottom')) + block_height / 2;
+			let new_pos_left = parseInt($(block).css('left')) + block_width / 2;
 
 			$('.angle').css('bottom', 'calc(' + new_pos_bottom + 'px - 2000px)');
 
@@ -727,10 +739,10 @@ alert('erwischt');
 			if (debug) {
 				if (debug_bounce_counter < debug_bounce_limit) {
 					debug_bounce_counter++;
-					bounce(ausfallswinkel, framecollision);
+					bounce(ausfallswinkel, block, framecollision);
 				}
 			}else {
-				bounce(ausfallswinkel, framecollision);
+				bounce(ausfallswinkel, block, framecollision);
 			}
 		}, time_next_bounce * 1000);
 
