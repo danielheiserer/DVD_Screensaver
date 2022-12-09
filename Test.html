@@ -12,7 +12,7 @@
 		.block {
 			background: yellowgreen;
 			height: 50px;
-			width: 50px;
+			width: 70px;
 			/*animation: spinner 1500ms infinite linear;*/
 			position: absolute;
 			top: calc(50% - 25px);
@@ -112,7 +112,7 @@
 	// TO-DO
 	// Bounce() sollte mehr Funktionen nutzen? (Auslagerung)
 
-	var debug = true;
+	var debug = false;
 	var debug_bounce_counter = 0;
 	var debug_bounce_limit = 0;
 	$(document).ready(function () {
@@ -141,7 +141,7 @@ alert('erwischt');
 			$(display).addClass('display');
 			let displayinput = document.createElement('INPUT');
 			$(displayinput).attr('type', 'number');
-			$(displayinput).val(62);
+			$(displayinput).val(302);
 			$(display).append(displayinput);
 			$('body').append(display);
 
@@ -459,8 +459,8 @@ alert('erwischt');
 					distanz = gegenkathete_unten;
 					framecollision = 'unten';
 				}else {
-					distanz = gegenkathete_rechts;
-					framecollision = 'rechts';
+					distanz = gegenkathete_links;
+					framecollision = 'links';
 				}
 
 				if (framecollision == 'unten'){
@@ -525,9 +525,40 @@ alert('erwischt');
 				ankathete_links = space_left + block_width / 2;
 				gegenkathete_links = parseInt(Math.abs(Math.tan(((ausfallswinkel - 270) * Math.PI) / 180) * ankathete_links));
 
-				//kürzere Rute (stimmt in ecken nicht immer ganz, weil wir die korrektur berücksichtigen müssten)
-				distanz = gegenkathete_oben < ankathete_links ? gegenkathete_oben : gegenkathete_links;
-				framecollision = gegenkathete_oben < ankathete_links ? 'oben' : 'links';
+				//Positionskorrektur
+				correct = 0;
+
+				// a^2 + b^2 = c^2 -> im ersten Schritt ist correct_x a oder b und im zweiten c
+
+				correct_top_kathete = parseInt(Math.abs(Math.tan(((360 - ausfallswinkel) * Math.PI) / 180) * (block_height / 2)));
+				correct_top = parseInt(Math.abs(Math.sqrt(Math.pow(correct_top_kathete, 2) + Math.pow(block_height / 2, 2))));
+
+				correct_side_kathete = parseInt(Math.abs(Math.tan(((ausfallswinkel - 270) * Math.PI) / 180) * block_width / 2));
+				correct_side = parseInt(Math.abs(Math.sqrt(Math.pow(correct_side_kathete, 2) + Math.pow(block_width / 2, 2))));
+
+				hypotenuse_top = parseInt(Math.sqrt(Math.pow(ankathete_oben, 2) + Math.pow(gegenkathete_oben, 2)));
+				hypotenuse_side = parseInt(Math.sqrt(Math.pow(ankathete_links, 2) + Math.pow(gegenkathete_links, 2)));
+
+				//kürzere Rute
+
+				corrected_top = Math.abs((hypotenuse_top - correct_top));
+				corrected_side = Math.abs((hypotenuse_side - correct_side));
+
+				if(corrected_top < corrected_side){
+					distanz = gegenkathete_oben;
+					framecollision = 'oben';
+				}else {
+					distanz = gegenkathete_links;
+					framecollision = 'links';
+				}
+
+				if (framecollision == 'oben'){
+					hypotenuse = hypotenuse_top - correct_top;
+					correct = correct_top_kathete;
+				}else {
+					hypotenuse = hypotenuse_side - correct_side;
+					correct = correct_side_kathete;
+				}
 
 				debug_direction = framecollision;
 				if(debug_direction == 'oben') {
@@ -538,16 +569,6 @@ alert('erwischt');
 					debug_direction = 'quad_4_links';
 					debug_ankathete = ankathete_links;
 					debug_gegenkathete = gegenkathete_links;
-				}
-
-
-				//Positionskorrektur
-				correct = 0;
-
-				if(framecollision ==  'oben') {
-					correct = parseInt(Math.abs(Math.tan(((360 - ausfallswinkel) * Math.PI) / 180) * (block_height / 2)));
-				}else{
-					correct = parseInt(Math.abs(Math.tan(((ausfallswinkel - 270) * Math.PI) / 180) * block_width / 2));
 				}
 
 				//geschw noch ausrechnen
