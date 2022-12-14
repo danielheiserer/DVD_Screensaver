@@ -19,6 +19,8 @@
 			box-sizing: border-box;
 			border-radius: 50%;
 			will-change: left, top;
+			background: linear-gradient(90deg, rgba(0,0,0,1) 25%, rgba(255,0,0,1) 50%, rgba(255,252,0,1) 75%);
+			animation: spin 1s infinite linear;
 		}
 
 		.block.debug {
@@ -111,6 +113,12 @@
 			border-bottom: white solid 2000px;
 		}
 
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
@@ -187,10 +195,10 @@
 
 		}
 		// init
-		for (let i = 0; i < 25; i++) {
+		for (let i = 0; i < 30; i++) {
 			setTimeout(function () {
 				bounce(get_random_degree());
-			}, i * 100);
+			}, i * 200);
 		}
 
 		function get_random_degree(){
@@ -221,16 +229,30 @@
 
 	});
 
+	function getRandomColor(){
+		let hex = Math.floor(Math.random()*16777215).toString(16);
+		if (hex.length == 5){
+			hex = 0 + hex;
+		}
+		return '#' + hex;
+	}
 
-	function bounce(einfallswinkel, block = null, seite = 'init'){
+	function getRandomNumber(lower_limit, upper_limit) {
+		return (parseInt((Math.random() * 10000000000000000)) % (upper_limit + 1 - lower_limit)) + lower_limit;
+	}
 
-		if(block == null){
+	function bounce(einfallswinkel, block = null, seite = 'init') {
+		let background = false;
+		if(block == null) {
 			block = document.createElement('DIV');
 			$(block).addClass('block');
-			let randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-			let randomRadius = Math.random() * 100000 % 50 + 50 // zwischen 50 und 100
+			let randomColor1 = getRandomColor();
+			let randomColor2 = getRandomColor();
+			let randomRadius = getRandomNumber(100, 200);
+
+			background = 'linear-gradient('+ einfallswinkel + 'deg, ' + randomColor1 + ' 0%, ' + randomColor2 + ' 100%)';
 			$(block).css({
-				'background': randomColor,
+				'background': background,
 				height : randomRadius + 'px',
 				width : randomRadius + 'px',
 			});
@@ -238,8 +260,8 @@
 			$('body').append(block);
 
 			$(block).bind("mouseover",function(){
-				alert('erwischt');
-				console.log('erwischt');
+				$(this).css('transition', 'unset');
+				$(this).css('border', 'solid 5px red');
 			});
 		}
 
@@ -645,8 +667,6 @@
 				break;
 			default : break;
 		}
-
-		console.log('hypotenuse: ' + hypotenuse);
 
 		if (debug) {
 			let debug_ankathete_element = document.createElement('DIV');
