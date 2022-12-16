@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				margin: 0;
+			}
+
+			.cube {
+				height: 52px;
+				width: 52px;
+	    		position: absolute;
+	    		/*border:red 1px solid;*/
+	    		transform: rotate3d(1, 1, 0, 77deg);
+	    		transform-style: preserve-3d;
+	    		animation: cube_spin linear 5s infinite;
+	    		/*transform: rotate3d(0, 1, 0, -270deg);*/
+			}
+
+			@keyframes cube_spin {
+				0% { transform: rotate3d(1, 1, 0, 0deg); }
+				100% { transform: rotate3d(1, 1, 0, 360deg); }
+			}
+
+			.cube .side {
+				height: 52px;
+				width: 52px;
+				position: absolute;
+				background: #F0F0F0;
+	    		border: 1px solid #dedede;
+	    		box-sizing:border-box;
+
+			}
+
+			.face-one {
+				transform: translate3d(0px, 0px, 25px);
+			}
+
+			.face-one .dot:first-child{
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-two {
+				transform:translate(25px, 0px) rotate3d(0, 1, 0, 90deg);
+			}
+
+			.face-two .dot:nth-child(1){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-two .dot:nth-child(2){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-three {
+				transform:translate(0px, 25px) rotate3d(1, 0, 0, 90deg);
+			}
+
+			.face-three .dot:nth-child(1){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-three .dot:nth-child(2){
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-three .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-four {
+				transform:translate(0px, -25px) rotate3d(1, 0, 0, 90deg);
+			}
+
+			.face-four .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(2){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(4){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five {
+				transform:translate(-25px, 0px) rotate3d(0, 1, 0, 90deg);
+			}
+
+			.face-five .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(2){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(4){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(5){
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-six {
+				transform:translate3d(0px, 0px, -25px);
+			}
+
+			.face-six .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(2){
+				top: calc(50% - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(3){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(4){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(5){
+				top: calc(50% - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(6){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.cube .side .dot {
+				background: black;
+				height: 12px;
+				width: 12px;
+				border-radius: 50%;
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="cube">
+			<div class="face-one side">
+				<div class="dot"></div>
+			</div>
+			<div class="face-two side">
+				<div class="dot"></div>
+				<div class="dot"></div>
+			</div>
+			<div class="face-three side">
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+			</div>
+			<div class="face-four side">
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+			</div>
+			<div class="face-five side">
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+			</div>
+			<div class="face-six side">
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+				<div class="dot"></div>
+			</div>
+		</div>
+	</body>
+</html>
