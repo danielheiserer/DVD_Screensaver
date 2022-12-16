@@ -3,10 +3,15 @@
 <head>
 	<style>
 		body {
-			margin: 0;
+			margin:0;
+		}
+
+		.bounce_field {
 			overflow: hidden;
 			height: 100vh;
 			width: 100vw;
+			position: relative;
+			background:powderblue;
 		}
 
 		.block {
@@ -19,7 +24,7 @@
 			box-sizing: border-box;
 			border-radius: 50%;
 			will-change: left, top;
-			background: linear-gradient(90deg, rgba(0,0,0,1) 25%, rgba(255,0,0,1) 50%, rgba(255,252,0,1) 75%);
+			background: radial-gradient(90deg, rgba(0,0,0,1) 25%, rgba(255,0,0,1) 50%, rgba(255,252,0,1) 75%);
 			animation: spin 1s infinite linear;
 		}
 
@@ -118,16 +123,188 @@
 			100% { transform: rotate(360deg); }
 		}
 
+		/******************************************
+		** Cube CSS
+		******************************************/
+
+		.cube {
+				height: 52px;
+				width: 52px;
+	    		position: absolute;
+	    		top: calc(50% - 26px);
+				left: calc(50% - 26px);
+	    		/*border:red 1px solid;*/
+	    		transform: rotate3d(1, 1, 0, 77deg);
+	    		transform-style: preserve-3d;
+	    		animation: cube_spin linear 5s infinite;
+	    		z-index: 1;
+			}
+
+			@keyframes cube_spin {
+				0% { transform: rotate3d(1, 1, 0, 0deg); }
+				100% { transform: rotate3d(1, 1, 0, 360deg); }
+			}
+
+			.cube .side {
+				height: 52px;
+				width: 52px;
+				position: absolute;
+				background: #F0F0F0;
+	    		border: 1px solid #dedede;
+	    		box-sizing:border-box;
+
+			}
+
+			.face-one {
+				transform: translate3d(0px, 0px, 25px);
+			}
+
+			.face-one .dot:first-child{
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-two {
+				transform:translate(25px, 0px) rotate3d(0, 1, 0, 90deg);
+			}
+
+			.face-two .dot:nth-child(1){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-two .dot:nth-child(2){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-three {
+				transform:translate(0px, 25px) rotate3d(1, 0, 0, 90deg);
+			}
+
+			.face-three .dot:nth-child(1){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-three .dot:nth-child(2){
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-three .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-four {
+				transform:translate(0px, -25px) rotate3d(1, 0, 0, 90deg);
+			}
+
+			.face-four .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(2){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-four .dot:nth-child(4){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five {
+				transform:translate(-25px, 0px) rotate3d(0, 1, 0, 90deg);
+			}
+
+			.face-five .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(2){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(3){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(4){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-five .dot:nth-child(5){
+				top: calc(50% - 6px);
+				left: calc(50% - 6px);
+			}
+
+			.face-six {
+				transform:translate3d(0px, 0px, -25px);
+			}
+
+			.face-six .dot:nth-child(1){
+				top: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(2){
+				top: calc(50% - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(3){
+				bottom: calc(11px - 6px);
+				left: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(4){
+				top: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(5){
+				top: calc(50% - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.face-six .dot:nth-child(6){
+				bottom: calc(11px - 6px);
+				right: calc(11px - 6px);
+			}
+
+			.cube .side .dot {
+				background: black;
+				height: 12px;
+				width: 12px;
+				border-radius: 50%;
+				position: absolute;
+			}
+
 
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
+	<div class="bounce_field"></div>
 </body>
 <script>
 	// TO-DO
 	// Bounce() sollte mehr Funktionen nutzen? (Auslagerung)
-	// Transform Translate statt transition?
+	// Div in figure umändern
+	// random Color funktion liefert manchmal transparente Farben -> passiert wenn der hexcode 4 oder 8 Stellen hat
+	//https://cssanimation.rocks/spheres/ -> für Spheres
 
 	var debug = false;
 	var debug_bounce_counter = 0;
@@ -139,7 +316,7 @@
 		if (debug) {
 			let angle = document.createElement('DIV');
 			$(angle).addClass('angle');
-			$('body').append(angle);
+			$('.bounce_field').append(angle);
 
 			let display = document.createElement('DIV');
 			$(display).addClass('display');
@@ -147,11 +324,11 @@
 			$(displayinput).attr('type', 'number');
 			$(displayinput).val(302);
 			$(display).append(displayinput);
-			$('body').append(display);
+			$('.bounce_field').append(display);
 
 			let angle_shadow = document.createElement('DIV');
 			$(angle_shadow).addClass('angle_shadow');
-			$('body').append(angle_shadow);
+			$('.bounce_field').append(angle_shadow);
 			let val = $('.display input').first().val();
 			$(angle_shadow).css('transform', 'rotate(' + val + 'deg');
 
@@ -162,7 +339,7 @@
 				$(origin_control).css('cursor', 'grabbing');
 				drag = true;
 			});
-			$('body').mousemove(function(){
+			$('.bounce_field').mousemove(function(){
 				if(drag){
 					$(origin_control).css({
 						top: 'calc(' + event.pageY + 'px - 15px)',
@@ -178,12 +355,12 @@
 				$(origin_control).css('cursor', 'grab');
 				drag = false;
 			});
-			$('body').append(origin_control);
+			$('.bounce_field').append(origin_control);
 
 			let reset_button = document.createElement('DIV');
 			$(reset_button).addClass('reset_button');
 			$(reset_button).html('Reset');
-			$('body').append(reset_button);
+			$('.bounce_field').append(reset_button);
 			$('.reset_button').bind('click', reset);
 
 			$('.display input').change(function() {
@@ -194,14 +371,16 @@
 			});
 
 		}
-		// init
-		for (let i = 0; i < 30; i++) {
-			setTimeout(function () {
-				bounce(get_random_degree());
-			}, i * 200);
-		}
+		// init..
+		if (!debug){
+					for (let i = 0; i < 25; i++) {
+						setTimeout(function () {
+							bounce(get_random_degree());
+						}, i * 200);
+					}
+			}
 
-		function get_random_degree(){
+		function get_random_degree() {
 			return parseInt(Math.random() * 100000 % 360);
 		}
 
@@ -214,7 +393,7 @@
 			let posx = parseInt($('.origin_control').css('left')) + 15;
 			let posy = parseInt($('.origin_control').css('top')) + 15;
 			console.log('Posx = ' + posx + '   Posy= ' + posy);
-			$('body').append(block);
+			$('.bounce_field').append(block);
 			$(block).css({
 				top: 'calc(' + posy + 'px - 25px)',
 				left: 'calc(' + posx + 'px - 25px)'
@@ -241,26 +420,100 @@
 		return (parseInt((Math.random() * 10000000000000000)) % (upper_limit + 1 - lower_limit)) + lower_limit;
 	}
 
-	function bounce(einfallswinkel, block = null, seite = 'init') {
+	function bounce(einfallswinkel, block = null, seite = 'init', block_type = false) {
 		let background = false;
+		if (block_type == false){
+			let which_block_type = getRandomNumber(1,10);
+			if(which_block_type > 7){
+				block_type = "cube";
+			}else {
+				block_type = "circle";
+			}
+		}
 		if(block == null) {
-			block = document.createElement('DIV');
-			$(block).addClass('block');
-			let randomColor1 = getRandomColor();
-			let randomColor2 = getRandomColor();
-			let randomRadius = getRandomNumber(100, 200);
+			if(block_type == "cube"){
+				block = document.createElement('DIV');
+				$(block).addClass('cube');
 
-			background = 'linear-gradient('+ einfallswinkel + 'deg, ' + randomColor1 + ' 0%, ' + randomColor2 + ' 100%)';
-			$(block).css({
-				'background': background,
-				height : randomRadius + 'px',
-				width : randomRadius + 'px',
-			});
+				let face_one = document.createElement('DIV');
+				$(face_one).addClass('face-one side');
+				for(let i = 0; i < 1; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_one).append(dot);
+				}
+				
 
-			$('body').append(block);
+				let face_two = document.createElement('DIV');
+				$(face_two).addClass('face-two side');
+				for(let i = 0; i < 2; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_two).append(dot);
+				}
+
+				let face_three = document.createElement('DIV');
+				$(face_three).addClass('face-three side');
+				for(let i = 0; i < 3; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_three).append(dot);
+				}
+
+				let face_four = document.createElement('DIV');
+				$(face_four).addClass('face-four side');
+				for(let i = 0; i < 4; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_four).append(dot);
+				}
+
+				let face_five = document.createElement('DIV');
+				$(face_five).addClass('face-five side');
+				for(let i = 0; i < 5; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_five).append(dot);
+				}
+
+				let face_six = document.createElement('DIV');
+				$(face_six).addClass('face-six side');
+				for(let i = 0; i < 6; i++){
+					let dot = document.createElement('DIV');
+					$(dot).addClass('dot');
+					$(face_six).append(dot);
+				}
+
+			
+				block = document.createElement('DIV');
+				$(block).addClass('cube');
+				$(block).append(face_one);
+				$(block).append(face_two);
+				$(block).append(face_three);
+				$(block).append(face_four);
+				$(block).append(face_five);
+				$(block).append(face_six);
+
+			}else {
+				block = document.createElement('DIV');
+				$(block).addClass('block');
+				let randomColor1 = getRandomColor();
+				let randomColor2 = getRandomColor();
+				let randomRadius = getRandomNumber(100, 200);
+
+				let gradient_circle = randomRadius * 0.25;
+
+				background = 'radial-gradient(circle at ' + gradient_circle + 'px ' + gradient_circle + 'px, '+  randomColor1 + ', ' + randomColor2 + ')';
+				$(block).css({
+					'background': background,
+					height : randomRadius + 'px',
+					width : randomRadius + 'px',
+				});
+			}
+
+			$('.bounce_field').append(block);
 
 			$(block).bind("mouseover",function(){
-				$(this).css('transition', 'unset');
 				$(this).css('border', 'solid 5px red');
 			});
 		}
@@ -330,7 +583,7 @@
 		switch (true) {
 			case (ausfallswinkel < 90):
 				space_top = block_top;
-				space_right = Math.abs(block_right - $('body').width());
+				space_right = Math.abs(block_right - $('.bounce_field').width());
 
 				//check oben
 				ankathete_oben = space_top + block_height / 2;
@@ -392,7 +645,7 @@
 				time_next_bounce = hypotenuse / block_speed;
 
 				$(block).css({
-					transition: "all linear " + time_next_bounce + "s"
+					transition: "top linear " + time_next_bounce + "s, left linear " + time_next_bounce + "s"
 				});
 
 				rotate_value = 'rotate(' + ausfallswinkel + 'deg)';
@@ -408,15 +661,15 @@
 				}else{
 					$(block).css({
 						top: block_top - distanz + correct,
-						left: $('body').width() - block_width
+						left: $('.bounce_field').width() - block_width
 					});
 				}
 
 				break;
 			case (ausfallswinkel < 180):
 
-				space_bottom = $('body').height() - block_bottom;
-				space_right = Math.abs(block_right - $('body').width());
+				space_bottom = $('.bounce_field').height() - block_bottom;
+				space_right = Math.abs(block_right - $('.bounce_field').width());
 
 				//check unten
 				ankathete_unten = space_bottom + block_height / 2;
@@ -478,7 +731,7 @@
 				time_next_bounce = Math.abs(hypotenuse) / block_speed;
 
 				$(block).css({
-					transition: "all linear " + time_next_bounce + "s"
+					transition: "top linear " + time_next_bounce + "s, left linear " + time_next_bounce + "s"
 				});
 
 				rotate_value = 'rotate(' + ausfallswinkel + 'deg)';
@@ -488,20 +741,20 @@
 
 				if (framecollision == 'unten') {
 					$(block).css({
-						top: $('body').height() - block_height,
+						top: $('.bounce_field').height() - block_height,
 						left: block_left + distanz - correct
 					});
 				}else{
 					$(block).css({
 						top: block_top + distanz - correct,
-						left: $('body').width() - block_width
+						left: $('.bounce_field').width() - block_width
 					});
 				}
 
 				break;
 			case (ausfallswinkel < 270):
 
-				space_bottom = $('body').height() - block_bottom;
+				space_bottom = $('.bounce_field').height() - block_bottom;
 				space_left = block_left;
 
 				//check unten
@@ -561,7 +814,7 @@
 				//geschw noch ausrechnen
 				time_next_bounce = hypotenuse / block_speed;
 				$(block).css({
-					transition: "all linear " + time_next_bounce + "s"
+					transition: "top linear " + time_next_bounce + "s, left linear " + time_next_bounce + "s"
 				});
 
 				rotate_value = 'rotate(' + ausfallswinkel + 'deg)';
@@ -571,7 +824,7 @@
 
 				if (framecollision == 'unten') {
 					$(block).css({
-						top: $('body').height() - block_height,
+						top: $('.bounce_field').height() - block_height,
 						left: block_left - distanz + correct
 					});
 				}else{
@@ -644,7 +897,7 @@
 				//geschw noch ausrechnen
 				time_next_bounce = hypotenuse / block_speed;
 				$(block).css({
-					transition: "all linear " + time_next_bounce + "s"
+					transition: "top linear " + time_next_bounce + "s, left linear " + time_next_bounce + "s"
 				});
 
 				rotate_value = 'rotate(' + ausfallswinkel + 'deg)';
@@ -671,11 +924,11 @@
 		if (debug) {
 			let debug_ankathete_element = document.createElement('DIV');
 			$(debug_ankathete_element).addClass('debug_ankathete_element');
-			$('body').append(debug_ankathete_element);
+			$('.bounce_field').append(debug_ankathete_element);
 
 			let debug_gegenkathete_element = document.createElement('DIV');
 			$(debug_gegenkathete_element).addClass('debug_gegenkathete_element');
-			$('body').append(debug_gegenkathete_element);
+			$('.bounce_field').append(debug_gegenkathete_element);
 
 			let new_pos_bottom = parseInt($(block).css('bottom')) + block_height / 2;
 			let new_pos_left = parseInt($(block).css('left')) + block_width / 2;
