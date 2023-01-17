@@ -6,12 +6,32 @@
 			margin:0;
 		}
 
-		.bounce_field {
+		.wrap{
 			overflow: hidden;
+		}
+
+		.bounce_container {
+			transform: rotate3d(1, 0, 0, 0deg);
+			transform-style: preserve-3d;
 			height: 100vh;
 			width: 100vw;
+			transition: 2s all ease-in-out;
+		}
+
+		.bounce_field {
+			overflow: hidden;
+			height: 100%;
+			width: 100%;
 			position: relative;
-			background:powderblue;
+			background: powderblue;
+			transform: translate3d(0px, 0px, 50vh);
+		}
+
+		.bottom_face {
+			background: beige;
+			transform: translate(0px, -50vh) rotate3d(1,0,0,90deg);
+			height: 100%;
+			width: 100%;
 		}
 
 		.block {
@@ -26,6 +46,7 @@
 			will-change: left, top;
 			background: radial-gradient(90deg, rgba(0,0,0,1) 25%, rgba(255,0,0,1) 50%, rgba(255,252,0,1) 75%);
 			animation: spin 1s infinite linear;
+			pointer-events: none;
 		}
 
 		.block.debug {
@@ -138,6 +159,7 @@
 	    		transform-style: preserve-3d;
 	    		animation: cube_spin linear 5s infinite;
 	    		z-index: 1;
+				pointer-events: none;
 			}
 
 			@keyframes cube_spin {
@@ -292,12 +314,41 @@
 				position: absolute;
 			}
 
+		.text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			z-index: 10;
+			margin: 0;
+			transform: translate(-50%,-50%);
+			color: #0a0;
+			font-size: 15rem;
+			text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+		}
+
+		.bottom_face .text {
+			font-size: 10rem;
+			transform: rotate3d(1,0,0,180deg) translate(-50%,50%);
+		}
+
+
+
+			/** class for activating pointer related stuff **/
+			.pointer-events-activated {
+				pointer-events: all;
+			}
+
 
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
-	<div class="bounce_field"></div>
+	<div class="wrap">
+		<div class="bounce_container">
+			<div class="bounce_field"></div>
+			<div class="bottom_face"></div>
+		</div>
+	</div>
 </body>
 <script>
 	// TO-DO
@@ -309,6 +360,8 @@
 	var debug = false;
 	var debug_bounce_counter = 0;
 	var debug_bounce_limit = 10;
+	var start_time = '';
+	var end_time = '';
 	$(document).ready(function () {
 
 		var block_speed = false; //in px per second
@@ -373,11 +426,28 @@
 		}
 		// init..
 		if (!debug){
-					for (let i = 0; i < 25; i++) {
+					let delay = 200;
+					let anz_elements = 25;
+					for (let i = 0; i < anz_elements; i++) {
 						setTimeout(function () {
 							bounce(get_random_degree());
-						}, i * 200);
+						}, i * delay);
 					}
+
+					setTimeout(function () {
+						let ready = $("<p class='text'></p>").text("Ready?");
+						$(".bounce_field").append(ready);
+						setTimeout(function () {$('.text').fadeOut();},500);
+					}, delay * anz_elements);
+
+					setTimeout(function () {
+						let go = $("<p class='text'></p>").text("GO!");
+						$(".bounce_field").append(go);
+						start_time = new Date();
+						setTimeout(function () {$('.text').fadeOut();},500);
+						$('.bounce_field .cube, .bounce_field .block').addClass('pointer-events-activated');
+					}, delay * anz_elements + 1500);
+
 			}
 
 		function get_random_degree() {
@@ -515,6 +585,17 @@
 
 			$(block).bind("mouseover",function(){
 				$(this).css('border', 'solid 5px red');
+				$(this).addClass('tagged');
+				let anz_bounce_items = $('.block, .cube').length
+
+				if ($('.bounce_field .tagged').length == anz_bounce_items){
+					$('.bounce_field .cube, .bounce_field .block').removeClass('pointer-events-activated');
+					end_time = new Date();
+					let dif = (end_time.getTime() - start_time.getTime()) / 1000;
+					let go = $("<p class='text'></p>").text("Zeit: " + dif + 's');
+					$(".bottom_face").append(go);
+					$('.bounce_container').css('transform', 'rotate3d(1, 0, 0, 90deg)');
+				}
 			});
 		}
 
